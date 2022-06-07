@@ -30,7 +30,7 @@
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-const mnemonic = "avocado note install number current fragile review season cause alert invest often";
+const mnemonic = "digital strategy daring mercy crew sense shove shrimp kick surprise subway north";
 
 module.exports = {
   /**

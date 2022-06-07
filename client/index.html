@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Web 3 Demo</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src='../node_modules/web3/dist/web3.min.js'></script>
+</head>
+<body>
+    Wallet Status
+    <br >
+    <button onclick="printCoolNumber();">Fetch Thread Process</button>
+    <button onclick="createThreadProcess();">Create Thread Process</button>
+    <br /><br />
+    Status: <span id="status">Loading...</span>
+    <script type="text/javascript">
+        async function loadWeb3() {
+            window.web3 = new Web3(new Web3.providers.HttpProvider("https://smart1.zeniq.network:9545"));
+
+            window.web3.eth.getBalance('0xE741B2C160e7504cB951a045eedC513D8a43bBF8', (err, wei) => {
+                balance = window.web3.utils.fromWei(wei, 'ether');
+                console.log("Actual Balance",balance);
+                updateStatus(balance+" ZENIQ");
+            })
+
+        }
+        async function loadContract() {
+            return await new window.web3.eth.Contract([
+                {
+                    "inputs": [
+                        {                        
+                            "internalType": "uint",
+                            "name": "_id",
+                            "type": "uint"
+                        }
+                    ],
+                    "name": "readHilo",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "origen",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint",
+                            "name": "sustainability",
+                            "type": "uint"
+                        },
+                        {
+                            "internalType": "uint",
+                            "name": "date",
+                            "type": "uint"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {                        
+                            "internalType": "uint",
+                            "name": "_key",
+                            "type": "uint"
+                        },
+                        {                        
+                            "internalType": "string",
+                            "name": "_origen",
+                            "type": "string"
+                        },
+                        {                        
+                            "internalType": "uint",
+                            "name": "_date",
+                            "type": "uint"
+                        },
+                        {                        
+                            "internalType": "uint",
+                            "name": "_sustainability",
+                            "type": "uint"
+                        }
+                    ],
+                    "name": "createHiloProcess",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ],
+            '0xE741B2C160e7504cB951a045eedC513D8a43bBF8');
+        }
+        async function printCoolNumber() {
+            updateStatus('fetching...');
+            const data = await window.contract.methods.readHilo(1).call();
+            console.log("data",data);
+        }
+
+        async function createThreadProcess(){
+            updateStatus('fetching...');
+            await window.contract.methods.createHiloProcess(1,"China",1000,80).call();
+        }
+        async function getCurrentAccount() {
+            const accounts = await window.web3.eth.getAccounts();
+            console.log(accounts);
+            return accounts[0];
+        }
+        async function load() {
+            await loadWeb3();
+            window.contract = await loadContract();
+            updateStatus('Ready!');
+        }
+        function updateStatus(status) {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = status;
+            console.log(status);
+        }
+        load();
+    </script>
+</body>
+</html>
