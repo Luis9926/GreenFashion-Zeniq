@@ -95,7 +95,9 @@
 
         async function createThreadProcess(){
             updateStatus('fetching...');
-            await window.contract.methods.createHiloProcess(1,"China",1000,80).call();
+            const res = await window.contract.methods.createHiloProcess(2,"China",1000,80).call();
+
+            console.log(res);
         }
         async function getCurrentAccount() {
             const accounts = await window.web3.eth.getAccounts();
